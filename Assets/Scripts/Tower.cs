@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Tower : MonoBehaviour
 {
+    public Transform firePoint;
     public GameObject bulletPrefab;
     public float cooldown;
     
@@ -20,16 +21,22 @@ public class Tower : MonoBehaviour
         var target = GetTarget();
         if (target == null) return;
         
-        var bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+        var bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
         bullet.GetComponent<Bullet>().target = target;
     }
 
     Transform GetTarget()
     {
-        for (int i = 0; i < enemies.Count; i++)
+        var hits = Physics.OverlapSphere(transform.position, 15);
+        foreach (var h in hits)
         {
-            if(enemies[i] != null) return enemies[i].transform;
+            if (h.transform.CompareTag("Enemy"))
+            {
+                print(h.name);
+                return h.transform;
+            }
         }
+        
         return null;
     }
     

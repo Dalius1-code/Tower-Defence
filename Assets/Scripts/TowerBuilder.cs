@@ -6,6 +6,10 @@ public class TowerBuilder : MonoBehaviour
 {
     public GameObject towerPrefab;
     public Transform cursor;
+    public Color okColor = Color.green;
+    public Color failColor = Color.red;
+    public bool canBuild = true;
+    
     
     void Update()
     {
@@ -14,7 +18,18 @@ public class TowerBuilder : MonoBehaviour
         {
             cursor.position = hit.point;
 
-            if (Input.GetMouseButtonDown(0))
+            if (hit.transform.CompareTag("Ground"))
+            {
+                canBuild = true;
+                cursor.GetComponent<Renderer>().material.color = okColor;
+            }
+            else
+            {
+                canBuild = false;
+                cursor.GetComponent<Renderer>().material.color = failColor;
+            }
+
+            if (Input.GetMouseButtonDown(0) && canBuild)
             {
                 Instantiate(towerPrefab, cursor.position, cursor.rotation);
             }
